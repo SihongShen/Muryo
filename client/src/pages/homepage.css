@@ -1,0 +1,115 @@
+.homepage-container {
+  position: relative;
+  width: 100%;
+  height: 100vh;
+  overflow: hidden;
+}
+
+.p5-background {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 0;
+}
+
+.p5-background canvas {
+  display: block;
+  width: 100% !important;
+  height: 100% !important;
+}
+
+.homepage-content {
+  position: relative;
+  z-index: 1;
+  width: 100%;
+  height: 100%;
+
+  display: flex;
+  justify-content: center; /* 水平居中 */
+  align-items: center;     /* 垂直居中 */
+  
+  /* 允许内容在需要时换行 */
+  flex-direction: column;
+}
+
+/* 确保圆圈容器覆盖整个视口，并能定位其子元素 */
+.floating-circles {
+    position: fixed; /* 或 absolute, 取决于你希望它们相对于谁定位 */
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none; /* 允许点击穿透到背景，除非点击到圆圈本身 */
+    z-index: 2; /* 确保它们位于背景上方 */
+}
+
+.circle {
+    pointer-events: auto; /* 重新启用圆圈的点击事件 */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: absolute; /* 相对于 .floating-circles 定位 */
+    
+    /* 圆圈的尺寸 */
+    width: 300px; /* 调整尺寸以满足“大圆圈”的要求 */
+    height: 300px;
+    
+    /* 变成圆形 */
+    border-radius: 50%;
+    
+  background: radial-gradient(
+        circle at center, 
+        var(--fore-color, rgba(255, 255, 255, 0)) 40%, 
+        transparent 120%
+    );
+
+    filter: blur(2px);
+    
+    text-decoration: none; /* 移除链接下划线 */
+    text-transform: uppercase;
+    font-weight: bold;
+    font-size: 1.2rem;
+    transition: transform 0.3s ease, background-color 0.3s ease;
+}
+
+.circle:hover {
+    transform: scale(1.15); /* 悬停效果 */
+    background: radial-gradient(
+      circle at center, 
+      var(--fore-color, rgba(255, 255, 255, 0)) 30%, 
+      transparent 120%
+    );
+}
+
+.circle span {
+     text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.5);
+     z-index: 3;
+}
+
+
+/* freebies - 例如：左上角 */
+.freebies-circle {
+    top: 10vh;
+    left: 5vw;
+}
+
+/* events - 例如：右中位置 */
+.events-circle {
+    top: 50vh;
+    right: 8vw;
+    /* 稍微调整，使其垂直居中 */
+    transform: translateY(-50%); 
+}
+
+/* account - 例如：右下角 */
+.account-circle {
+    bottom: 5vh;
+    left: 20vw;
+}
+
+
+.homepage-content h1{
+  font-size: 3.5rem;
+}
