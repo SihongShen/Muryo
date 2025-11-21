@@ -1,9 +1,9 @@
 import React, { useEffect, useRef } from 'react';
 import p5 from 'p5';
 import Matter from 'matter-js';
-import { initBackground } from '../components/clutter_js/sketch';
+import { initBackground } from '../../components/clutter_js/sketch.js';
 import './homepage.css';
-import Shuffle from '../components/shuffle.jsx';
+import Shuffle from '../../components/shuffle.jsx';
 
 function Homepage() {
   const containerRef = useRef(null);
