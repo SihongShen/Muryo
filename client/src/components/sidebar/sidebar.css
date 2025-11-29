@@ -1,0 +1,44 @@
+.sidebar-container {
+  position: fixed;
+  left: 20px;
+  top: 50%;
+  transform: translateY(-50%);
+  z-index: 100;
+  border-radius: 50px; /* 椭圆形状 */
+  padding: 10px;
+  box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+  transition: background-color 0.3s ease;
+}
+
+.sidebar-pill {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  align-items: center;
+  padding: 10px 5px;
+}
+
+.sidebar-icon {
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 10px;
+  border-radius: 50%;
+  transition: all 0.2s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  opacity: 0.6;
+}
+
+.sidebar-icon:hover {
+  opacity: 1;
+  background-color: rgba(0,0,0,0.05);
+  transform: scale(1.1);
+}
+
+.sidebar-icon.active {
+  opacity: 1;
+  font-weight: bold;
+  background-color: rgba(0,0,0,0.1);
+}

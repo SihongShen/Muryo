@@ -45,6 +45,30 @@
     z-index: 2; /* 确保它们位于背景上方 */
 }
 
+/* 1. 圆圈容器的退出状态 */
+.floating-circles.exiting {
+  /* 使用 pointer-events 避免动画过程中再次点击 */
+  pointer-events: none; 
+}
+
+/* 2. 定义每个圆圈在 exiting 状态下的行为 
+   这里我们用 transform 实现向左移动并缩小 */
+.floating-circles.exiting .circle {
+  transition: all 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+  opacity: 0;
+  
+  /* 这里的 translate 值需要根据你原来的布局微调。
+     -45vw 大概是让它们飞到屏幕左边缘 */
+  transform: translateX(-45vw) scale(0.2); 
+}
+
+/* 3. 让其他内容（标题、按钮）简单淡出 */
+.fade-out {
+  opacity: 0;
+  transition: opacity 0.5s ease;
+  pointer-events: none;
+}
+
 .circle {
     pointer-events: auto; /* 重新启用圆圈的点击事件 */
     display: flex;
@@ -89,8 +113,8 @@
 }
 
 
-/* freebies - 例如：左上角 */
-.freebies-circle {
+/* products - 例如：左上角 */
+.products-circle {
     top: 10vh;
     left: 5vw;
 }
