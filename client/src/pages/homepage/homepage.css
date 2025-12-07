@@ -70,36 +70,53 @@
 }
 
 .circle {
-    pointer-events: auto; /* 重新启用圆圈的点击事件 */
+    pointer-events: auto;
     display: flex;
     justify-content: center;
     align-items: center;
-    position: absolute; /* 相对于 .floating-circles 定位 */
+    position: absolute;
     
-    /* 圆圈的尺寸 */
-    width: 300px; /* 调整尺寸以满足“大圆圈”的要求 */
+    width: 300px;
     height: 300px;
     
-    /* 变成圆形 */
     border-radius: 50%;
     
-  background: radial-gradient(
+    text-decoration: none;
+    text-transform: uppercase;
+    font-weight: bold;
+    font-size: 1.2rem;
+    
+    transition: transform 0.3s ease, background-color 0.3s ease;
+
+    position: absolute; 
+    z-index: 1;
+}
+
+.circle::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    border-radius: 50%;
+    z-index: -1;
+
+    background: radial-gradient(
         circle at center, 
         var(--fore-color, rgba(255, 255, 255, 0)) 40%, 
         transparent 120%
     );
-
     filter: blur(2px);
     
-    text-decoration: none; /* 移除链接下划线 */
-    text-transform: uppercase;
-    font-weight: bold;
-    font-size: 1.2rem;
-    transition: transform 0.3s ease, background-color 0.3s ease;
+    transition: background 0.3s ease;
 }
 
 .circle:hover {
-    transform: scale(1.15); /* 悬停效果 */
+    transform: scale(1.15);
+}
+
+.circle:hover::before {
     background: radial-gradient(
       circle at center, 
       var(--fore-color, rgba(255, 255, 255, 0)) 30%, 
@@ -108,8 +125,9 @@
 }
 
 .circle span {
-     text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.5);
-     z-index: 3;
+  text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.5);
+  z-index: 3; /* 确保文字在最上层 */
+  position: relative;
 }
 
 

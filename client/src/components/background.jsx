@@ -2,17 +2,16 @@ import React, { useEffect, useRef, useState } from 'react';
 import { Outlet } from 'react-router-dom';
 import p5 from 'p5';
 import Matter from 'matter-js';
-import { initBackground } from './clutter_js/sketch.js'; // 确保路径正确
+import { initBackground } from './clutter_js/sketch.js';
 
 const Background = () => {
   const containerRef = useRef(null);
   const backgroundInstanceRef = useRef(null);
   
-  // 状态提升到 Layout
   const [typeColor, setTypeColor] = useState(null);
   const [foreColor, setForeColor] = useState(null);
 
-  // 1. 监听 window 颜色变化的逻辑
+  // 1. monitor color change
   useEffect(() => {
     const interval = setInterval(() => {
       if (window.typeColor && window.typeColor !== typeColor) {
@@ -23,7 +22,7 @@ const Background = () => {
     return () => clearInterval(interval);
   }, [typeColor]);
 
-  // 2. 初始化 P5 背景
+  // 2. initiate P5 sketch
   useEffect(() => {
     if (!containerRef.current) return;
     try {
@@ -34,7 +33,7 @@ const Background = () => {
       });
       backgroundInstanceRef.current = instance;
       
-      // 初始化获取一次颜色
+      // get the first initialized color
       if(instance.getColors) {
         setTypeColor(instance.getColors().typeColor);
         setForeColor(instance.getColors().foreColor);
@@ -51,7 +50,7 @@ const Background = () => {
     };
   }, []);
 
-  // 3. 换色功能的逻辑
+  // 3. change color logic
   const handleNewPalette = () => {
     if (backgroundInstanceRef.current) {
       backgroundInstanceRef.current.newPalette();
@@ -65,15 +64,12 @@ const Background = () => {
   return (
     <div className="layout-container" style={{ position: 'relative', width: '100vw', height: '100vh', overflow: 'hidden' }}>
       
-      {/* P5 背景层：永远置底 */}
       <div 
         ref={containerRef} 
         id="p5-background" 
         style={{ position: 'absolute', top: 0, left: 0, zIndex: -1000 }}
       />
 
-      {/* 内容层：通过 Outlet 渲染当前页面 */}
-      {/* 我们通过 context 属性把颜色和函数传给子页面 */}
       <div style={{ position: 'relative', zIndex: 1, height: '100%' }}>
         <Outlet context={{ typeColor, foreColor, handleNewPalette }} />
       </div>

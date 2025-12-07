@@ -3,13 +3,25 @@ import { useOutletContext } from 'react-router-dom';
 import Sidebar from '../../components/sidebar/sidebar';
 import './products.css';
 
+const PlusIcon = () => (
+  <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>
+);
+
+const TrashIcon = () => (
+  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><polyline points="3 6 5 6 21 6"></polyline><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path></svg>
+);
+const EditIcon = () => (<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path></svg>);
+
 function ProductPage() {
     const { typeColor, foreColor } = useOutletContext();
     // state to hold products
     const [products, setproducts] = useState([]);
     const [loading, setLoading] = useState(true);
+    // add pop-up window
+    const [showModal, setShowModal] = useState(false);
+    const [editingProduct, setEditingProduct] = useState(null);
     // form state
-    const [formData, setFormData] = useState({
+    const initialFormState = {
         name: '',
         imageURL: '',
         category: '',
@@ -17,7 +29,8 @@ function ProductPage() {
         ip: '',
         quantity: 0,
         description: ''
-    });
+    };
+    const [formData, setFormData] = useState(initialFormState);
 
     //GET products from server
     const fetchProducts = async () => {
@@ -32,26 +45,49 @@ function ProductPage() {
         }
     };
 
-  // fetch products on component mount
-  useEffect(() => {
-    fetchProducts();
-  }, []);
+    // fetch products on component mount
+    useEffect(() => {
+        fetchProducts();
+    }, []);
 
-  // handle form input changes
-  const handleInputChange = (e) => {
-    const { name, value } = e.target;
-    setFormData(prev => ({
-      ...prev,
-      [name]: value
-    }));
-  };
+    // handle form input changes
+   const handleInputChange = (e) => setFormData({ ...formData, [e.target.name]: e.target.value });
+
+    // add button
+    const handleAddNew = () => {
+        setEditingProduct(null);
+        setFormData(initialFormState);
+        setShowModal(true);
+    };
+
+    // edit button
+    const handleEdit = (product, e) => {
+        e.stopPropagation();
+        setEditingProduct(product);
+        setFormData({
+            name: product.name,
+            imageUrl: product.imageUrl || '',
+            category: product.category || '',
+            character: product.character || '',
+            ip: product.ip || '',
+            quantity: product.quantity || 1,
+            description: product.description || ''
+        });
+        setShowModal(true);
+    };
 
     // POST new product to server
     const handleSubmit = async (e) => {
         e.preventDefault();
+        const isEdit = !!editingProduct;
+        const url = isEdit
+                    ? `http://localhost:5001/api/products/${editingProduct._id}`
+                    : 'http://localhost:5001/api/products';
+        const method = isEdit ? 'PUT' : 'POST';
+
         try {
-            const response = await fetch('http://localhost:5001/api/products', {
-                method: 'POST',
+            const response = await fetch(url, {
+                method,
                 headers: {
                     'Content-Type': 'application/json'
                 },
@@ -60,15 +96,7 @@ function ProductPage() {
             if (response.ok) {
                 alert('Product added successfully!');
                 fetchProducts(); // refresh product list
-                setFormData({
-                    name: '',
-                    imageURL: '',
-                    category: '',
-                    character: '',
-                    ip: '',
-                    quantity: 0,
-                    description: ''
-                });
+                setShowModal(false);
             } else {
                 alert('Failed to add product.');
             }
@@ -78,127 +106,128 @@ function ProductPage() {
     };
 
     // DELETE product by id
-    const handleDelete = async (id) => {
-        if(!window.confirm('delete?')) return;
+    const handleDelete = async (id, e) => {
+        e.stopPropagation();
+        if(!window.confirm('Delete this item?')) return;
         try {
             await fetch(`http://localhost:5001/api/products/${id}`, { method: 'DELETE' });
-            fetchProducts(); // 刷新列表
+            fetchProducts();
         } catch (error) {
-            console.error('Error deleting product:', error);
+            console.error('Error:', error);
         }
     };
 
-    // input styles
-    const inputStyle = {
-        padding: '8px',
-        borderRadius: '8px',
-        border: `1px solid ${typeColor}`,
-        background: 'rgba(255,255,255,0.8)',
-        outline: 'none',
-        width: '100%'
+    const cardStyle = {
+        borderColor: typeColor,
+        color: typeColor,
+        background: 'rgba(255, 255, 255, 0.6)'
     };
 
-return (
-    <div className="product-page-container" style={{ width: '100%', height: '100%' }}>
-      
-      <Sidebar activePage="products" typeColor={typeColor} foreColor={foreColor} />
+    return (
+        <div className="product-page-wrapper">
 
-      <div className="content" style={{ 
-          marginLeft: '100px', 
-          padding: '40px',
-          height: '100%',
-          overflowY: 'auto' 
-      }}>
-        <h1 style={{ color: typeColor, fontSize: '2.5rem', marginBottom: '20px' }}>
-          My Collection
-        </h1>
+            <div className="glass-background-layer" />
 
-        {/* --- 添加区域 (表单) --- */}
-        <div style={{ 
-            marginBottom: '40px', 
-            padding: '20px', 
-            border: `2px dashed ${typeColor}`, 
-            borderRadius: '20px',
-            background: 'rgba(255,255,255,0.4)'
-        }}>
-          <h3 style={{ color: typeColor, marginBottom: '15px' }}>Add New Item</h3>
-          <form onSubmit={handleSubmit} style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '15px' }}>
-            <input name="name" placeholder="名称 (Name)" value={formData.name} onChange={handleInputChange} style={inputStyle} required />
-            <input name="category" placeholder="类别 (Category: 吧唧/立牌...)" value={formData.category} onChange={handleInputChange} style={inputStyle} />
-            <input name="character" placeholder="角色 (Character)" value={formData.character} onChange={handleInputChange} style={inputStyle} />
-            <input name="ip" placeholder="作品/IP" value={formData.ip} onChange={handleInputChange} style={inputStyle} />
-            <input name="imageURL" placeholder="图片URL (Image Link)" value={formData.imageURL} onChange={handleInputChange} style={inputStyle} />
-            <input type="number" name="quantity" placeholder="数量" value={formData.quantity} onChange={handleInputChange} style={inputStyle} />
-            <input name="description" placeholder="备注 (Note)" value={formData.description} onChange={handleInputChange} style={{ ...inputStyle, gridColumn: 'span 2' }} />
-            
-            <button type="submit" style={{ 
-              gridColumn: 'span 2', 
-              padding: '10px', 
-              background: typeColor, 
-              color: foreColor, 
-              border: 'none', 
-              borderRadius: '8px', 
-              cursor: 'pointer',
-              fontWeight: 'bold'
-            }}>
-              Add to Collection
-            </button>
-          </form>
-        </div>
-        
-        {/* --- 展示区域 (列表) --- */}
-        {loading ? (
-          <p style={{ color: typeColor }}>Loading...</p>
-        ) : (
-          <div style={{ 
-              display: 'grid', 
-              gridTemplateColumns: 'repeat(auto-fill, minmax(250px, 1fr))', 
-              gap: '20px',
-              paddingBottom: '50px' 
-          }}>
-            {products.map(item => (
-              <div key={item._id} style={{ 
-                background: 'rgba(255,255,255,0.6)', 
-                backdropFilter: 'blur(5px)',
-                border: `2px solid ${typeColor}`,
-                borderRadius: '15px',
-                padding: '15px',
-                display: 'flex',
-                flexDirection: 'column',
-                gap: '8px',
-                position: 'relative'
-              }}>
-                {/* 如果有图片就显示图片 */}
-                {item.imageUrl && (
-                    <div style={{ width: '100%', height: '150px', borderRadius: '10px', overflow: 'hidden', marginBottom: '10px', backgroundColor: '#ddd' }}>
-                        <img src={item.imageUrl} alt={item.name} style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
+            <Sidebar activePage="products" typeColor={typeColor} foreColor={foreColor} />
+
+            <div className="main-content">
+                <header className="page-header">
+                    <h1 style={{ color: typeColor }}>My Collections</h1>
+                    <span className="count-badge" style={{ borderColor: typeColor, color: typeColor }}>
+                        {products.length} items
+                    </span>
+                </header>
+
+                {loading ? (
+                    <div className="loading-state" style={{ color: typeColor }}>Loading...</div>
+                ) : products.length === 0 ? (
+                    <div className="empty-state" style={{ color: typeColor }}>
+                        <h2> Nothing here yet...</h2>
+                        <p> Click the button below to add your first collection!</p>
+                    </div>
+                ) : (
+                    <div className="product-list-container">
+                        {products.map(item => (
+                            <div key={item._id} className="product-horizontal-card" style={cardStyle}>
+                                <div className="card-left-media">
+                                    {item.imageURL ? (
+                                        <img src={item.imageURL} alt={item.name} />
+                                    ) : (
+                                        <div className="placeholder-image" style={{ background: typeColor, opacity: 0.1 }}></div>
+                                    )}
+                                </div>
+
+                                <div className="card-right-info">
+                                    <div className="info-header">
+                                        <h3>{item.name}</h3>
+                                        <div className="quantity-badge" style={{ border: `1px solid ${typeColor}` }}>
+                                            x{item.quantity}
+                                        </div>
+                                    </div>
+
+                                    <div className="details-expand-area">
+                                        <div className="tags-container">
+                                            {item.category && <span className="detail-tag" style={{background: typeColor, color: foreColor}}>{item.category}</span>}
+                                            {item.ip && <span className="detail-tag outline" style={{borderColor: typeColor}}>{item.ip}</span>}
+                                            {item.character && <span className="detail-tag outline" style={{borderColor: typeColor}}>{item.character}</span>}
+                                        </div>
+                                        {item.description && (
+                                            <p className="item-note" style={{ borderLeft: `3px solid ${typeColor}` }}>
+                                                {item.description}
+                                            </p>
+                                        )}
+                                    </div>
+                                </div>
+                                
+                                <div className="card-actions">
+                                    <button className="action-btn edit-btn" onClick={(e) => handleEdit(item, e)} style={{ color: typeColor, borderColor: typeColor }}>
+                                        <EditIcon />
+                                    </button>
+                                    <button className="action-btn delete-btn" onClick={(e) => handleDelete(item._id, e)} style={{ color: typeColor, borderColor: typeColor }}>
+                                        <TrashIcon />
+                                    </button>
+                                </div>
+                            </div>
+                        ))}
                     </div>
                 )}
-                
-                <h3 style={{ color: typeColor, margin: 0 }}>{item.name}</h3>
-                <div style={{ fontSize: '0.9rem', color: '#555' }}>
-                    <p>IP: {item.ip} / Char: {item.character}</p>
-                    <p>Type: {item.category} | Qty: {item.quantity}</p>
-                    {item.note && <p style={{ fontStyle: 'italic', marginTop: '5px' }}>"{item.note}"</p>}
-                </div>
+            </div>
 
-                <button 
-                  onClick={() => handleDelete(item._id)}
-                  style={{ 
-                    position: 'absolute', top: '10px', right: '10px', 
-                    background: 'red', color: 'white', border: 'none', 
-                    borderRadius: '50%', width: '25px', height: '25px', cursor: 'pointer' 
-                  }}
-                >
-                    ×
-                </button>
-              </div>
-            ))}
-          </div>
-        )}
-      </div>
-    </div>
-  );
+            <button className="fab-add-btn" onClick={handleAddNew} style={{ background: typeColor, color: foreColor }}>
+                <PlusIcon />
+            </button>
+
+            {showModal && (
+                <div className="modal-overlay" onClick={() => setShowModal(false)}>
+                    <div 
+                        className="modal-content" 
+                        onClick={e => e.stopPropagation()}
+                        style={{ border: `2px solid ${typeColor}`, color: typeColor }}
+                    >
+                        <h2>Add New Item</h2>
+                        <form onSubmit={handleSubmit} className="modal-form">
+                            <input name="name" placeholder="Name *" value={formData.name} onChange={handleInputChange} required style={{ borderColor: typeColor }} />
+                            <div className="form-row">
+                                <input name="category" placeholder="Category (e.g. Badge)" value={formData.category} onChange={handleInputChange} style={{ borderColor: typeColor }} />
+                                <input type="number" name="quantity" placeholder="Qty" value={formData.quantity} onChange={handleInputChange} style={{ borderColor: typeColor }} />
+                            </div>
+                            <div className="form-row">
+                                <input name="character" placeholder="Character" value={formData.character} onChange={handleInputChange} style={{ borderColor: typeColor }} />
+                                <input name="ip" placeholder="Series / IP" value={formData.ip} onChange={handleInputChange} style={{ borderColor: typeColor }} />
+                            </div>
+                            <input name="imageURL" placeholder="Image URL (http://...)" value={formData.imageURL} onChange={handleInputChange} style={{ borderColor: typeColor }} />
+                            <textarea name="description" placeholder="Description" value={formData.description} onChange={handleInputChange} style={{ borderColor: typeColor }} rows="3" />
+                            
+                            <div className="modal-actions">
+                                <button type="button" onClick={() => setShowModal(false)} style={{ color: typeColor }}>Cancel</button>
+                                <button type="submit" style={{ background: typeColor, color: foreColor }}>Add Item</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            )}
+        </div>
+    );
 }
 
 export default ProductPage;
