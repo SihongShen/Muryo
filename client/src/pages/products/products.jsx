@@ -15,6 +15,19 @@ const EditIcon = () => (<svg width="18" height="18" viewBox="0 0 24 24" fill="no
 
 function ProductPage() {
     const { typeColor, foreColor } = useOutletContext();
+
+    // deal a bit with color pattern
+    const fColor = String(foreColor).toLowerCase();
+    const tColor = String(typeColor).toLowerCase();
+    const colorMap = {
+        '#f2eadf': '#0a3a40',
+        '#122459': '#122459',
+        '#bfbdb8': '#000000',
+    };
+    const displayTypeColor = (tColor === '#ffffff' && colorMap[fColor]) 
+        ? colorMap[fColor] 
+        : typeColor;
+
     // state to hold products
     const [products, setproducts] = useState([]);
     const [loading, setLoading] = useState(true);
@@ -171,14 +184,14 @@ function ProductPage() {
     };
 
     const cardStyle = {
-        borderColor: typeColor,
-        color: typeColor,
+        borderColor: displayTypeColor,
+        color: displayTypeColor,
         background: 'rgba(255, 255, 255, 0.6)'
     };
 
     const selectStyle = {
-        borderColor: typeColor,
-        color: typeColor,
+        borderColor: displayTypeColor,
+        color: displayTypeColor,
         background: 'transparent',
         padding: '5px 10px',
         borderRadius: '15px',
@@ -192,11 +205,11 @@ function ProductPage() {
 
             <div className="glass-background-layer" />
 
-            <Sidebar activePage="products" typeColor={typeColor} foreColor={foreColor} />
+            <Sidebar activePage="products" typeColor={displayTypeColor} foreColor={foreColor} />
 
             <div className="main-content">
                 <header className="page-header">
-                    <h1 style={{ color: typeColor }}>My Collections</h1>
+                    <h1 style={{ color: displayTypeColor }}>My Collections</h1>
 
                     <div className="header-controls">
                         <div className="filter-group">
@@ -223,18 +236,18 @@ function ProductPage() {
                             <option value="least">Qty: Low to High</option>
                         </select>
 
-                        <div style={{ width: '1px', height: '20px', background: typeColor, opacity: 0.3 }}></div>
+                        <div style={{ width: '1px', height: '20px', background: displayTypeColor, opacity: 0.3 }}></div>
 
-                        <span className="count-badge" style={{ color: typeColor }}>
+                        <span className="count-badge" style={{ color: displayTypeColor }}>
                             {filteredAndSortedProducts.length} items
                         </span>
                     </div>
                 </header>
 
                 {loading ? (
-                    <div className="loading-state" style={{ color: typeColor }}>Loading...</div>
+                    <div className="loading-state" style={{ color: displayTypeColor }}>Loading...</div>
                 ) : filteredAndSortedProducts.length === 0 ? (
-                    <div className="empty-state" style={{ color: typeColor }}>
+                    <div className="empty-state" style={{ color: displayTypeColor }}>
                         {products.length === 0 ? (
                             <>
                                 <h2>Nothing here yet...</h2>
@@ -252,14 +265,14 @@ function ProductPage() {
                                     {item.imageURL ? (
                                         <img src={item.imageURL} alt={item.name} />
                                     ) : (
-                                        <div className="placeholder-image" style={{ background: typeColor, opacity: 0.1 }}></div>
+                                        <div className="placeholder-image" style={{ background: displayTypeColor, opacity: 0.1 }}></div>
                                     )}
                                 </div>
 
                                 <div className="card-right-info">
                                     <div className="info-header">
                                         <h3>{item.name}</h3>
-                                        <div className="quantity-badge" style={{ border: `1px solid ${typeColor}` }}>
+                                        <div className="quantity-badge" style={{ border: `1px solid ${displayTypeColor}` }}>
                                             x{item.quantity}
                                         </div>
 
@@ -274,12 +287,12 @@ function ProductPage() {
 
                                     <div className="details-expand-area">
                                         <div className="tags-container">
-                                            {item.category && <span className="detail-tag outline" style={{borderColor: typeColor}}>{item.category}</span>}
-                                            {item.ip && <span className="detail-tag outline" style={{borderColor: typeColor}}>{item.ip}</span>}
-                                            {item.character && <span className="detail-tag outline" style={{borderColor: typeColor}}>{item.character}</span>}
+                                            {item.category && <span className="detail-tag outline" style={{borderColor: displayTypeColor}}>{item.category}</span>}
+                                            {item.ip && <span className="detail-tag outline" style={{borderColor: displayTypeColor}}>{item.ip}</span>}
+                                            {item.character && <span className="detail-tag outline" style={{borderColor: displayTypeColor}}>{item.character}</span>}
                                         </div>
                                         {item.description && (
-                                            <p className="item-note" style={{ borderLeft: `3px solid ${typeColor}` }}>
+                                            <p className="item-note" style={{ borderLeft: `3px solid ${displayTypeColor}` }}>
                                                 {item.description}
                                             </p>
                                         )}
@@ -287,10 +300,10 @@ function ProductPage() {
                                 </div>
 
                                 <div className="card-actions">
-                                    <button className="action-btn edit-btn" onClick={(e) => handleEdit(item, e)} style={{ color: typeColor, borderColor: typeColor }}>
+                                    <button className="action-btn edit-btn" onClick={(e) => handleEdit(item, e)} style={{ color: displayTypeColor, borderColor: displayTypeColor }}>
                                         <EditIcon />
                                     </button>
-                                    <button className="action-btn delete-btn" onClick={(e) => handleDelete(item._id, e)} style={{ color: typeColor, borderColor: typeColor }}>
+                                    <button className="action-btn delete-btn" onClick={(e) => handleDelete(item._id, e)} style={{ color: displayTypeColor, borderColor: displayTypeColor }}>
                                         <TrashIcon />
                                     </button>
                                 </div>
@@ -300,7 +313,7 @@ function ProductPage() {
                 )}
             </div>
 
-            <button className="fab-add-btn" onClick={handleAddNew} style={{ background: typeColor, color: foreColor }}>
+            <button className="fab-add-btn" onClick={handleAddNew} style={{ background: displayTypeColor, color: foreColor }}>
                 <PlusIcon />
             </button>
 
@@ -309,20 +322,20 @@ function ProductPage() {
                     <div 
                         className="modal-content" 
                         onClick={e => e.stopPropagation()}
-                        style={{ border: `2px solid ${typeColor}`, color: typeColor }}
+                        style={{ border: `2px solid ${displayTypeColor}`, color: displayTypeColor }}
                     >
                         <h2>Add New Item</h2>
                         <form onSubmit={handleSubmit} className="modal-form">
-                            <input name="name" placeholder="Name *" value={formData.name} onChange={handleInputChange} required style={{ borderColor: typeColor }} />
+                            <input name="name" placeholder="Name *" value={formData.name} onChange={handleInputChange} required style={{ borderColor: displayTypeColor }} />
                             <div className="form-row">
-                                <input name="category" placeholder="Category (e.g. Badge)" value={formData.category} onChange={handleInputChange} style={{ borderColor: typeColor }} />
-                                <input type="number" name="quantity" placeholder="Qty" value={formData.quantity} onChange={handleInputChange} style={{ borderColor: typeColor }} />
+                                <input name="category" placeholder="Category (e.g. Badge)" value={formData.category} onChange={handleInputChange} style={{ borderColor: displayTypeColor }} />
+                                <input type="number" name="quantity" placeholder="Qty" value={formData.quantity} onChange={handleInputChange} style={{ borderColor: displayTypeColor }} />
                             </div>
                             <div className="form-row">
-                                <input name="character" placeholder="Character" value={formData.character} onChange={handleInputChange} style={{ borderColor: typeColor }} />
-                                <input name="ip" placeholder="Series / IP" value={formData.ip} onChange={handleInputChange} style={{ borderColor: typeColor }} />
+                                <input name="character" placeholder="Character" value={formData.character} onChange={handleInputChange} style={{ borderColor: displayTypeColor }} />
+                                <input name="ip" placeholder="Series / IP" value={formData.ip} onChange={handleInputChange} style={{ borderColor: displayTypeColor }} />
                             </div>
-                            <div className="file-input-wrapper" style={{ border: `1px solid ${typeColor}`, borderRadius: '8px', padding: '10px' }}>
+                            <div className="file-input-wrapper" style={{ border: `1px solid ${displayTypeColor}`, borderRadius: '8px', padding: '10px' }}>
                                 <label style={{ display: 'block', marginBottom: '5px', fontSize: '0.8rem', fontWeight: 'bold' }}>
                                     Upload Image (Max 15MB)
                                 </label>
@@ -338,11 +351,11 @@ function ProductPage() {
                                     </div>
                                 )}
                             </div>
-                            <textarea name="description" placeholder="Description" value={formData.description} onChange={handleInputChange} style={{ borderColor: typeColor }} rows="3" />
+                            <textarea name="description" placeholder="Description" value={formData.description} onChange={handleInputChange} style={{ borderColor: displayTypeColor }} rows="3" />
                             
                             <div className="modal-actions">
-                                <button type="button" onClick={() => setShowModal(false)} style={{ color: typeColor }}>Cancel</button>
-                                <button type="submit" style={{ background: typeColor, color: foreColor }}>Add Item</button>
+                                <button type="button" onClick={() => setShowModal(false)} style={{ color: displayTypeColor }}>Cancel</button>
+                                <button type="submit" style={{ background: displayTypeColor, color: foreColor }}>Add Item</button>
                             </div>
                         </form>
                     </div>
