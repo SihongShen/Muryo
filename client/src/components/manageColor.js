@@ -29,7 +29,7 @@ export function getRandomColor(p){
   } else if(rs<40){
     p.print("PALETTE 4");
     colors.bkgdColor = p.color('#262626');
-    colors.foreColor = p.color('#ffffff'); // bfbdb8
+    colors.foreColor = p.color('#bfbdb8');
     colors.typeColor = p.color('#ffffff');
     colors.color1 = p.color('#735c40');
     colors.color2 = p.color('#d9d6d0');

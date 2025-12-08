@@ -9,7 +9,8 @@ const app = express();
 
 // middleware
 app.use(cors()); //allow cross-origin requests
-app.use(express.json()); //parse JSON request bodies
+app.use(express.json({ limit: '50mb' })); //parse JSON request bodies
+app.use(express.urlencoded({ limit: '50mb', extended: true }));
 
 // routes
 app.use('/api/products', productRoutes);

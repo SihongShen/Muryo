@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useOutletContext } from 'react-router-dom';
 import Sidebar from '../../components/sidebar/sidebar';
+import DateDisplay from '../../components/DateDisplay';
 import './products.css';
 
 const PlusIcon = () => (
@@ -20,6 +21,10 @@ function ProductPage() {
     // add pop-up window
     const [showModal, setShowModal] = useState(false);
     const [editingProduct, setEditingProduct] = useState(null);
+    // select function
+    const [filters, setFilters] = useState({ category: 'All', character: 'All', ip: 'All'});
+    // sort function
+    const [sortBy, setSortBy] = useState('newest');
     // form state
     const initialFormState = {
         name: '',
@@ -50,8 +55,56 @@ function ProductPage() {
         fetchProducts();
     }, []);
 
+    // helper function: get the unique product as required
+    const getUniqueValues = (key) => {
+        const values = products.map(item => item[key]).filter(Boolean);
+        return['All', ...new Set(values)];
+    };
+
+    // get final list
+    const filteredAndSortedProducts = products.filter(item => {
+        const matchCategory = filters.category === 'All' || item.category === filters.category;
+        const matchCharacter = filters.character === 'All' || item.character === filters.character;
+        const matchIp = filters.ip === 'All' || item.ip === filters.ip;
+        return matchCategory && matchCharacter && matchIp;
+    }).sort((a, b) => {
+        switch(sortBy){
+            case 'newest': return new Date(b.time) - new Date(a.time);
+            case 'oldest': return new Date(a.time) - new Date(b.time);
+            case 'most': return b.quantity - a.quantity;
+            case 'least': return a.quantity - b.quantity;
+            default: return 0;
+        }
+    });
+
     // handle form input changes
-   const handleInputChange = (e) => setFormData({ ...formData, [e.target.name]: e.target.value });
+    const handleInputChange = (e) => setFormData({ 
+        ...formData, 
+        [e.target.name]: e.target.value 
+    });
+
+    // handle filter change
+    const handleFilterChange = (e) => {
+        setFilters(prev => ({ ...prev, [e.target.name]: e.target.value }));
+    };
+
+    // translate uploaded img to Base64
+    const handleImageUpload = (e) => {
+        const file = e.target.files[0];
+        if (!file) return;
+
+        if (file.size > 15 * 1024 * 1024){
+            alert("Image is too large! Please upload an image under 15MB. <3");
+            return;
+        }
+
+        const reader = new FileReader();
+        reader.readAsDataURL(file);
+        // after transforming, send to database
+        reader.onloadend = () => {
+            setFormData(prev => ({ ...prev, imageURL: reader.result }));
+        };
+    };
 
     // add button
     const handleAddNew = () => {
@@ -66,7 +119,7 @@ function ProductPage() {
         setEditingProduct(product);
         setFormData({
             name: product.name,
-            imageUrl: product.imageUrl || '',
+            imageURL: product.imageURL || '',
             category: product.category || '',
             character: product.character || '',
             ip: product.ip || '',
@@ -123,6 +176,17 @@ function ProductPage() {
         background: 'rgba(255, 255, 255, 0.6)'
     };
 
+    const selectStyle = {
+        borderColor: typeColor,
+        color: typeColor,
+        background: 'transparent',
+        padding: '5px 10px',
+        borderRadius: '15px',
+        outline: 'none',
+        fontSize: '0.85rem',
+        cursor: 'pointer'
+    };
+
     return (
         <div className="product-page-wrapper">
 
@@ -133,21 +197,56 @@ function ProductPage() {
             <div className="main-content">
                 <header className="page-header">
                     <h1 style={{ color: typeColor }}>My Collections</h1>
-                    <span className="count-badge" style={{ borderColor: typeColor, color: typeColor }}>
-                        {products.length} items
-                    </span>
+
+                    <div className="header-controls">
+                        <div className="filter-group">
+                            <select name="category" value={filters.category} onChange={handleFilterChange} style={selectStyle}>
+                                <option value="All">Category: All</option>
+                                {getUniqueValues('category').filter(v => v !== 'All').map(v => <option key={v} value={v}>{v}</option>)}
+                            </select>
+
+                            <select name="character" value={filters.character} onChange={handleFilterChange} style={selectStyle}>
+                                <option value="All">Char: All</option>
+                                {getUniqueValues('character').filter(v => v !== 'All').map(v => <option key={v} value={v}>{v}</option>)}
+                            </select>
+
+                            <select name="ip" value={filters.ip} onChange={handleFilterChange} style={selectStyle}>
+                                <option value="All">IP: All</option>
+                                {getUniqueValues('ip').filter(v => v !== 'All').map(v => <option key={v} value={v}>{v}</option>)}
+                            </select>
+                        </div>
+
+                        <select value={sortBy} onChange={(e) => setSortBy(e.target.value)} style={selectStyle}>
+                            <option value="newest">Sort: Newest</option>
+                            <option value="oldest">Sort: Oldest</option>
+                            <option value="most">Qty: High to Low</option>
+                            <option value="least">Qty: Low to High</option>
+                        </select>
+
+                        <div style={{ width: '1px', height: '20px', background: typeColor, opacity: 0.3 }}></div>
+
+                        <span className="count-badge" style={{ color: typeColor }}>
+                            {filteredAndSortedProducts.length} items
+                        </span>
+                    </div>
                 </header>
 
                 {loading ? (
                     <div className="loading-state" style={{ color: typeColor }}>Loading...</div>
-                ) : products.length === 0 ? (
+                ) : filteredAndSortedProducts.length === 0 ? (
                     <div className="empty-state" style={{ color: typeColor }}>
-                        <h2> Nothing here yet...</h2>
-                        <p> Click the button below to add your first collection!</p>
+                        {products.length === 0 ? (
+                            <>
+                                <h2>Nothing here yet...</h2>
+                                <p>Click the button below to add your first collection!</p>
+                            </>
+                        ) : (
+                            <h3>No items match your filters.</h3>
+                        )}
                     </div>
                 ) : (
                     <div className="product-list-container">
-                        {products.map(item => (
+                        {filteredAndSortedProducts.map(item => (
                             <div key={item._id} className="product-horizontal-card" style={cardStyle}>
                                 <div className="card-left-media">
                                     {item.imageURL ? (
@@ -163,11 +262,19 @@ function ProductPage() {
                                         <div className="quantity-badge" style={{ border: `1px solid ${typeColor}` }}>
                                             x{item.quantity}
                                         </div>
+
+                                         <DateDisplay 
+                                            dateString={item.time}
+                                            style={{
+                                                marginLeft: '30px',
+                                                marginTop: '2px',
+                                                fontWeight: 'normal'
+                                            }}/>
                                     </div>
 
                                     <div className="details-expand-area">
                                         <div className="tags-container">
-                                            {item.category && <span className="detail-tag" style={{background: typeColor, color: foreColor}}>{item.category}</span>}
+                                            {item.category && <span className="detail-tag outline" style={{borderColor: typeColor}}>{item.category}</span>}
                                             {item.ip && <span className="detail-tag outline" style={{borderColor: typeColor}}>{item.ip}</span>}
                                             {item.character && <span className="detail-tag outline" style={{borderColor: typeColor}}>{item.character}</span>}
                                         </div>
@@ -178,7 +285,7 @@ function ProductPage() {
                                         )}
                                     </div>
                                 </div>
-                                
+
                                 <div className="card-actions">
                                     <button className="action-btn edit-btn" onClick={(e) => handleEdit(item, e)} style={{ color: typeColor, borderColor: typeColor }}>
                                         <EditIcon />
@@ -215,7 +322,22 @@ function ProductPage() {
                                 <input name="character" placeholder="Character" value={formData.character} onChange={handleInputChange} style={{ borderColor: typeColor }} />
                                 <input name="ip" placeholder="Series / IP" value={formData.ip} onChange={handleInputChange} style={{ borderColor: typeColor }} />
                             </div>
-                            <input name="imageURL" placeholder="Image URL (http://...)" value={formData.imageURL} onChange={handleInputChange} style={{ borderColor: typeColor }} />
+                            <div className="file-input-wrapper" style={{ border: `1px solid ${typeColor}`, borderRadius: '8px', padding: '10px' }}>
+                                <label style={{ display: 'block', marginBottom: '5px', fontSize: '0.8rem', fontWeight: 'bold' }}>
+                                    Upload Image (Max 15MB)
+                                </label>
+                                <input 
+                                    type="file" 
+                                    accept="image/*" 
+                                    onChange={handleImageUpload} 
+                                    style={{ fontSize: '0.9rem' }}
+                                />
+                                {formData.imageURL && (
+                                    <div style={{ marginTop: '10px', width: '60px', height: '60px', borderRadius: '4px', overflow: 'hidden', border: '1px solid #ccc' }}>
+                                        <img src={formData.imageURL} alt="Preview" style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
+                                    </div>
+                                )}
+                            </div>
                             <textarea name="description" placeholder="Description" value={formData.description} onChange={handleInputChange} style={{ borderColor: typeColor }} rows="3" />
                             
                             <div className="modal-actions">
