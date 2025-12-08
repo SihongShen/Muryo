@@ -13,8 +13,8 @@ import M_Ring from './scripts/m_ring';
 import M_Sphere from './scripts/m_sphere';
 import M_Cloud from './scripts/m_cloud';
 import { bindTextures, grabRandomColor } from './scripts/textures';
-import { newPalette } from './scripts/update'; // 导入您的 newPalette 函数
-import { getRandomColor } from '../manageColor'; // 导入 getRandomColor 用于 shufflePalette
+import { newPalette } from './scripts/update';
+import { getRandomColor } from '../manageColor';
 
 // Expose classes globally for m_grfx.js to access
 window.M_Ring = M_Ring;
@@ -24,14 +24,12 @@ window.M_Cloud = M_Cloud;
 function aggressiveCanvasCleanup(parentOrId) {
     const parentEl = typeof parentOrId === 'string' ? document.getElementById(parentOrId) : parentOrId;
     
-    // 1. 移除默认的 p5 全局 Canvas (如果存在且未包含在父元素中)
     const defaultCanvas = document.getElementById('defaultCanvas0');
     if (defaultCanvas && (!parentEl || !parentEl.contains(defaultCanvas))) {
         console.warn('Aggressively removing orphaned defaultCanvas0.');
         defaultCanvas.remove();
     }
     
-    // 2. 清空目标父元素中所有的 Canvas，防止 Canvas 堆叠
     if (parentEl instanceof HTMLElement) {
         Array.from(parentEl.getElementsByTagName('canvas')).forEach(canvas => {
             console.log('Removing existing canvas from parent element:', canvas.id);
@@ -106,7 +104,6 @@ export function initBackground({ parent = 'p5-root', P5 = window.p5, Matter = wi
   // container element
   const container = (typeof parent === 'string') ? document.getElementById(parent) || document.body : parent;
 
-  // p5 实例的引用，在 setup 中赋值
   let p5Instance;
 
     // helper: convert a p5.Color to hex (returns null if color missing)
@@ -123,7 +120,7 @@ export function initBackground({ parent = 'p5-root', P5 = window.p5, Matter = wi
     // No preload needed - we removed all font/text loading
 
     p.setup = () => {
-      p5Instance = p; // 捕获 p5 实例
+      p5Instance = p;
       p.createCanvas(p.windowWidth, p.windowHeight, p.WEBGL);
       try {
         if (container && container.appendChild) {

@@ -48,6 +48,7 @@ function Homepage() {
       </div>
       
       <div className="homepage-content">
+        <h1 style={{color: typeColor}}>Welcome!</h1>
         <h1 style={{color: typeColor}}>Any Inspiration today?</h1>
       </div>
         <Shuffle onShuffle={handleNewPalette} />
