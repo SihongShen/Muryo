@@ -43,6 +43,12 @@ export function initBackground({ parent = 'p5-root', P5 = window.p5, Matter = wi
     throw new Error('p5 not provided to initBackground');
   }
 
+  // Prevent double initialization (React StrictMode or accidental remounts)
+  if (window.__clutter_instance) {
+    console.warn('initBackground: returning existing clutter instance');
+    return window.__clutter_instance;
+  }
+
   // Aggressively clean up any existing canvases before creating a new p5 instance
   aggressiveCanvasCleanup(parent);
 
@@ -249,7 +255,7 @@ export function initBackground({ parent = 'p5-root', P5 = window.p5, Matter = wi
   // create the p5 instance
   const p5InstanceRef = new P5(sketch, container);
 
-  return {
+  const api = {
     // ---------------------------------------------------------------------
     // EXPOSE newPalette METHOD (like original code)
     // ---------------------------------------------------------------------
@@ -319,17 +325,17 @@ export function initBackground({ parent = 'p5-root', P5 = window.p5, Matter = wi
       } catch(e){
         console.warn('newPalette failed', e);
       }
-    },
-    // ---------------------------------------------------------------------
-    
-    // Original remove method
-    remove(){
+  },
+
+  // ---------------------------------------------------------------------
+  // Original remove method
+  remove(){
       try {
         if (runner && engine) {
           Runner.stop(runner);
         }
       } catch(e){}
-      try { p5InstanceRef.remove(); } catch(e){}
+  try { p5InstanceRef.remove(); } catch(e){}
       // Clean up global references
       try {
         delete window.gOptionCount;
@@ -343,10 +349,12 @@ export function initBackground({ parent = 'p5-root', P5 = window.p5, Matter = wi
         // DELETE THE OLD GLOBAL HOOK
         delete window.__clutter_shuffle; 
         delete window.__clutter_initialPaletteSet;
+        // clear singleton marker so a fresh instance can be created later
+        try { delete window.__clutter_instance; } catch(e){}
       } catch(e){}
     },
 
-    getColors(){
+  getColors(){
         return {
             bkgdColor: colorToHex(bkgdColor),
             foreColor: colorToHex(foreColor),
@@ -356,5 +364,10 @@ export function initBackground({ parent = 'p5-root', P5 = window.p5, Matter = wi
             color3: colorToHex(color3),
         }
     },
-}
+  };
+
+  // expose singleton reference for future calls
+  window.__clutter_instance = api;
+
+  return api;
 }
