@@ -5,6 +5,7 @@ import Background from './components/background.jsx';
 import Homepage from './pages/homepage/homepage.jsx';
 import ProductPage from './pages/products/products.jsx';
 import EventsPage from './pages/events/events.jsx';
+import UserPage from './pages/user/user.jsx';
 
 function App() {
   return (
@@ -18,7 +19,7 @@ function App() {
             <Route path="products" element={<ProductPage />} />
             
             <Route path="events" element={<EventsPage />} />
-            <Route path="account" element={<div>AccountPage</div>} />
+            <Route path="account" element={<UserPage />} />
           
           </Route>
         </Routes>

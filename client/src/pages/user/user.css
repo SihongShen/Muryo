@@ -1,0 +1,114 @@
+.product-page-wrapper {
+    width: 100%;
+    height: 100vh;
+    display: flex;
+    overflow: hidden;
+}
+
+.profile-card {
+    width: 400px;
+    padding: 40px;
+    border: 1px solid;
+    border-radius: 24px;
+    background: rgba(255, 255, 255, 0.6);
+    backdrop-filter: blur(15px);
+    -webkit-backdrop-filter: blur(15px);
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05);
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    animation: fadeInUp 0.5s ease;
+}
+
+.avatar-circle {
+    width: 100px;
+    height: 100px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 3.5rem;
+    font-weight: bold;
+    margin-bottom: 20px;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+}
+
+.username {
+    margin: 0 0 5px 0;
+    font-size: 2rem;
+    font-weight: 800;
+}
+
+.user-tag {
+    font-size: 0.8rem;
+    padding: 4px 12px;
+    border: 1px solid;
+    border-radius: 20px;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    margin-bottom: 30px;
+}
+
+/* 统计数据 Grid */
+.stats-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    gap: 20px;
+    width: 100%;
+    margin-top: 10px;
+    padding-top: 20px;
+    border-top: 1px dashed rgba(0,0,0,0.1);
+}
+
+.stat-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.stat-value {
+    font-size: 1.8rem;
+    font-weight: 900;
+    line-height: 1;
+    margin-bottom: 5px;
+}
+
+.stat-label {
+    font-size: 0.75rem;
+    opacity: 0.6;
+    text-transform: uppercase;
+}
+
+/* 菜单列表 */
+.settings-list {
+    width: 400px;
+    margin-top: 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    animation: fadeInUp 0.5s ease 0.1s backwards; /* 稍微延迟一点 */
+}
+
+.setting-item {
+    padding: 15px 25px;
+    border: 1px solid;
+    border-radius: 16px;
+    background: rgba(255, 255, 255, 0.4);
+    backdrop-filter: blur(10px);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-weight: 600;
+    transition: all 0.2s ease;
+}
+
+.setting-item:hover {
+    transform: translateX(5px); /* 悬浮时轻微右移 */
+    background: rgba(255, 255, 255, 0.7);
+}
+
+@keyframes fadeInUp {
+    from { opacity: 0; transform: translateY(20px); }
+    to { opacity: 1; transform: translateY(0); }
+}
