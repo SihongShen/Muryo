@@ -56,12 +56,14 @@ function EventsPage() {
     const [expandedEventId, setExpandedEventId] = useState(null);
     const [tempItems, setTempItems] = useState([]);
     const [addingEventId, setAddingEventId] = useState(null);
+    const [showEventModal, setShowEventModal] = useState(false);
 
     // get actual products
     useEffect(() => {
         const fetchProducts = async () => {
             try {
                 const res = await fetch('http://localhost:5001/api/products'); 
+                // const res = await fetch('/api/products'); 
                 const data = await res.json();
                 setProducts(data);
             } catch (err) {
@@ -158,6 +160,24 @@ function EventsPage() {
             }
             return ev;
         }));
+    };
+
+    // add new event
+    const handleAddNewEvent = (e) => {
+        e.preventDefault();
+        const form = e.target;
+        const formData = new FormData(form);
+
+        const newEvent = {
+            id: Date.now(),
+            name: formData.get('name'),
+            date: formData.get('date'),
+            location: formData.get('location'),
+            swaps: []
+        };
+
+        setEvents(prev => [newEvent, ...prev]);
+        setShowEventModal(false);
     };
 
     return (
@@ -286,6 +306,32 @@ function EventsPage() {
                         </div>
                     ))}
                 </div>
+
+                <button 
+                    className="fab-add-btn" 
+                    onClick={() => setShowEventModal(true)} 
+                    style={{ background: displayTypeColor, color: foreColor }}
+                >
+                    <PlusIcon />
+                </button>
+
+                {showEventModal && (
+                    <div className="modal-overlay" onClick={() => setShowEventModal(false)}>
+                        <div className="modal-content" onClick={e => e.stopPropagation()} style={{ border: `2px solid ${displayTypeColor}`, color: displayTypeColor }}>
+                            <h2>Add New Event</h2>
+                            <form onSubmit={handleAddNewEvent} className="modal-form">
+                                <input name="name" placeholder="Event Name (e.g. Comiket)" required style={{ borderColor: displayTypeColor }} />
+                                <input name="date" type="date" required style={{ borderColor: displayTypeColor }} />
+                                <input name="location" placeholder="Location" required style={{ borderColor: displayTypeColor }} />
+                                
+                                <div className="modal-actions">
+                                    <button type="button" onClick={() => setShowEventModal(false)} style={{ color: displayTypeColor }}>Cancel</button>
+                                    <button type="submit" style={{ background: displayTypeColor, color: foreColor }}>Add Event</button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                )}
             </div>
         </div>
     );

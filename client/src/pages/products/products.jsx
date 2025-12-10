@@ -54,6 +54,7 @@ function ProductPage() {
     const fetchProducts = async () => {
         try{
             const response = await fetch('http://localhost:5001/api/products');
+            // const response = await fetch('/api/products');
             const data = await response.json();
             setproducts(data);
             setLoading(false);
@@ -149,6 +150,8 @@ function ProductPage() {
         const url = isEdit
                     ? `http://localhost:5001/api/products/${editingProduct._id}`
                     : 'http://localhost:5001/api/products';
+                    // ? `/api/products/${editingProduct._id}`
+                    // : '/api/products';
         const method = isEdit ? 'PUT' : 'POST';
 
         try {
@@ -176,7 +179,7 @@ function ProductPage() {
         e.stopPropagation();
         if(!window.confirm('Delete this item?')) return;
         try {
-            await fetch(`http://localhost:5001/api/products/${id}`, { method: 'DELETE' });
+            await fetch(`/api/products/${id}`, { method: 'DELETE' });
             fetchProducts();
         } catch (error) {
             console.error('Error:', error);
