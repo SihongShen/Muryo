@@ -20,7 +20,7 @@
 .main-content {
     flex: 1;
     margin-left: 100px;
-    padding: 40px 60px;
+    padding: 64px 60px;
     height: 100vh;
     overflow-y: auto;
     scrollbar-width: none;
@@ -36,6 +36,7 @@
     align-items: center;
     justify-content: space-between;
     margin-bottom: 40px;
+    margin-left: 7vw;
     flex-wrap: wrap;
     gap: 20px;
 }

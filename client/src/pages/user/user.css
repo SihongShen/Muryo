@@ -50,7 +50,6 @@
     margin-bottom: 30px;
 }
 
-/* 统计数据 Grid */
 .stats-grid {
     display: grid;
     grid-template-columns: 1fr 1fr 1fr;
@@ -80,14 +79,14 @@
     text-transform: uppercase;
 }
 
-/* 菜单列表 */
 .settings-list {
     width: 400px;
-    margin-top: 20px;
+    margin-top: 48px;
     display: flex;
     flex-direction: column;
     gap: 15px;
-    animation: fadeInUp 0.5s ease 0.1s backwards; /* 稍微延迟一点 */
+    animation: fadeInUp 0.5s ease 0.1s backwards;
+    margin-bottom: 10vh;
 }
 
 .setting-item {
@@ -104,7 +103,7 @@
 }
 
 .setting-item:hover {
-    transform: translateX(5px); /* 悬浮时轻微右移 */
+    transform: translateX(5px);
     background: rgba(255, 255, 255, 0.7);
 }
 
