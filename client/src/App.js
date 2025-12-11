@@ -10,25 +10,11 @@ import LoginPage from './pages/login/login.jsx';
 import ProtectedRoute from './components/ProtectedRoute.jsx';
 
 const Layout = () => {
-  const logoColor = '#0a3a40'; 
-
   return (
     <>
       <Link 
         to="/" 
-        style={{
-            position: 'fixed',
-            top: '24px',
-            left: '80px',
-            zIndex: 1000,
-            textDecoration: 'none',
-            color: logoColor,
-            fontSize: '2.2rem',
-            fontWeight: '900',
-            letterSpacing: '1px',
-            fontFamily: '"Helvetica Neue", sans-serif',
-            textShadow: '0 5px 10px rgba(255, 255, 255, 0.67)'
-        }}
+        className="app-logo"
       >
         無料MEMO
       </Link>

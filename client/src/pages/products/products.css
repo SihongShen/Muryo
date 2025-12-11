@@ -328,7 +328,6 @@
     background: transparent;
 }
 
-/* Animations */
 @keyframes fadeIn {
   from { opacity: 0; }
   to { opacity: 1; }
@@ -337,4 +336,275 @@
 @keyframes slideUp {
   from { transform: translateY(20px); opacity: 0; }
   to { transform: translateY(0); opacity: 1; }
+}
+
+/* Responsive Design: iPad (768px - 1024px) */
+@media (max-width: 1024px) {
+  .main-content {
+    margin-left: 80px;
+    padding: 40px 30px;
+  }
+
+  .page-header {
+    flex-direction: column;
+    align-items: flex-start;
+    margin-left: 0;
+    margin-bottom: 30px;
+  }
+
+  .header-controls {
+    flex-wrap: wrap;
+    width: 100%;
+  }
+
+  .filter-group {
+    flex-wrap: wrap;
+  }
+
+  .page-header h1 {
+    font-size: 2rem;
+    width: 100%;
+  }
+
+  .product-list-container {
+    max-width: 100%;
+  }
+
+  .product-horizontal-card {
+    gap: 15px;
+    padding: 12px;
+  }
+
+  .card-left-media {
+    width: 80px;
+    height: 80px;
+  }
+
+  .product-horizontal-card:hover .card-left-media {
+    width: 120px;
+    height: 120px;
+  }
+
+  .info-header h3 {
+    font-size: 1.1rem;
+  }
+
+  .fab-add-btn {
+    bottom: 30px;
+    right: 30px;
+    width: 50px;
+    height: 50px;
+  }
+
+  .modal-content {
+    width: 350px;
+  }
+}
+
+/* Responsive Design: Mobile (375px - 768px) */
+@media (max-width: 768px) {
+  .product-page-wrapper {
+    flex-direction: column;
+  }
+
+  .main-content {
+    margin-left: 0;
+    padding: 20px 15px;
+    height: auto;
+    min-height: 100vh;
+  }
+
+  .page-header {
+    flex-direction: column;
+    align-items: flex-start;
+    margin-left: 0;
+    margin-bottom: 20px;
+    gap: 15px;
+  }
+
+  .page-header h1 {
+    font-size: 1.5rem;
+    width: 100%;
+  }
+
+  .header-controls {
+    flex-direction: column;
+    width: 100%;
+    gap: 10px;
+  }
+
+  .filter-group {
+    flex-direction: column;
+    width: 100%;
+  }
+
+  .filter-group select,
+  .header-controls select {
+    width: 100%;
+    font-size: 0.85rem;
+  }
+
+  .product-list-container {
+    max-width: 100%;
+    gap: 15px;
+    padding-bottom: 80px;
+  }
+
+  .product-horizontal-card {
+    flex-direction: column;
+    gap: 12px;
+    padding: 10px;
+  }
+
+  .card-left-media {
+    width: 100%;
+    height: 200px;
+  }
+
+  .product-horizontal-card:hover .card-left-media {
+    width: 100%;
+    height: 200px;
+  }
+
+  .card-right-info {
+    width: 100%;
+  }
+
+  .info-header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 8px;
+  }
+
+  .info-header h3 {
+    font-size: 1.1rem;
+    width: 100%;
+  }
+
+  .quantity-badge {
+    align-self: flex-start;
+  }
+
+  .details-expand-area {
+    max-height: 100%;
+    opacity: 1;
+    margin-top: 10px;
+  }
+
+  .card-actions {
+    position: static;
+    display: flex;
+    gap: 10px;
+    opacity: 1;
+    transform: translateX(0);
+    margin-top: 10px;
+    justify-content: flex-start;
+  }
+
+  .empty-state {
+    height: 50vh;
+    font-size: 1.5rem;
+  }
+
+  .empty-state h2 {
+    font-size: 1.8rem;
+  }
+
+  .fab-add-btn {
+    bottom: 20px;
+    right: 20px;
+    width: 50px;
+    height: 50px;
+    font-size: 24px;
+  }
+
+  .modal-overlay {
+    padding: 20px;
+  }
+
+  .modal-content {
+    width: 100%;
+    max-width: 300px;
+    padding: 20px;
+  }
+
+  .modal-form {
+    gap: 12px;
+  }
+
+  .modal-form input,
+  .modal-form textarea {
+    font-size: 16px; /* Prevents zoom on iOS */
+  }
+
+  .form-row {
+    flex-direction: column;
+    gap: 8px;
+  }
+
+  .form-row input {
+    width: 100%;
+  }
+}
+
+/* Ultra-small devices (< 375px) */
+@media (max-width: 375px) {
+  .main-content {
+    padding: 15px 10px;
+  }
+
+  .page-header h1 {
+    font-size: 1.3rem;
+  }
+
+  .header-controls {
+    gap: 8px;
+  }
+
+  .filter-group select,
+  .header-controls select {
+    font-size: 0.75rem;
+    padding: 3px 8px;
+  }
+
+  .product-horizontal-card {
+    padding: 8px;
+    gap: 10px;
+  }
+
+  .card-left-media {
+    height: 150px;
+  }
+
+  .info-header h3 {
+    font-size: 1rem;
+  }
+
+  .detail-tag {
+    font-size: 0.7rem;
+    padding: 2px 6px;
+  }
+
+  .fab-add-btn {
+    width: 45px;
+    height: 45px;
+    bottom: 15px;
+    right: 15px;
+  }
+
+  .modal-content {
+    max-width: 280px;
+    padding: 15px;
+  }
+
+  .modal-form input,
+  .modal-form textarea {
+    padding: 10px;
+    font-size: 14px;
+  }
+
+  .modal-actions button {
+    padding: 8px 15px;
+    font-size: 0.9rem;
+  }
 }

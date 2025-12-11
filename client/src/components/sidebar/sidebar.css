@@ -42,3 +42,62 @@
   font-weight: bold;
   background-color: rgba(0,0,0,0.1);
 }
+
+/* Responsive Design: iPad and smaller devices */
+@media (max-width: 1024px) {
+  .sidebar-container {
+    left: 60px;
+  }
+}
+
+/* Responsive Design: Mobile (375px - 768px) */
+@media (max-width: 768px) {
+  .sidebar-container {
+    position: fixed;
+    left: 10px;
+    top: 50%;
+    transform: translateY(-50%);
+    padding: 8px;
+    border-radius: 40px;
+  }
+
+  .sidebar-pill {
+    gap: 15px;
+    padding: 8px 3px;
+  }
+
+  .sidebar-icon {
+    padding: 8px;
+    width: 40px;
+    height: 40px;
+  }
+
+  .sidebar-icon svg {
+    width: 20px;
+    height: 20px;
+  }
+}
+
+/* Ultra-small devices (< 375px) */
+@media (max-width: 375px) {
+  .sidebar-container {
+    left: 8px;
+    padding: 6px;
+  }
+
+  .sidebar-pill {
+    gap: 12px;
+    padding: 6px 2px;
+  }
+
+  .sidebar-icon {
+    padding: 6px;
+    width: 36px;
+    height: 36px;
+  }
+
+  .sidebar-icon svg {
+    width: 18px;
+    height: 18px;
+  }
+}
