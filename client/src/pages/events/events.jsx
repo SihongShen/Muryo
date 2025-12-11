@@ -311,6 +311,7 @@ function EventsPage() {
                     className="fab-add-btn" 
                     onClick={() => setShowEventModal(true)} 
                     style={{ background: displayTypeColor, color: foreColor }}
+                    aria-label="add event button"
                 >
                     <PlusIcon />
                 </button>

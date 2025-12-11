@@ -303,10 +303,20 @@ function ProductPage() {
                                 </div>
 
                                 <div className="card-actions">
-                                    <button className="action-btn edit-btn" onClick={(e) => handleEdit(item, e)} style={{ color: displayTypeColor, borderColor: displayTypeColor }}>
+                                    <button 
+                                        className="action-btn edit-btn" 
+                                        onClick={(e) => handleEdit(item, e)} 
+                                        style={{ color: displayTypeColor, borderColor: displayTypeColor }}
+                                        aria-label='edit content'
+                                    >
                                         <EditIcon />
                                     </button>
-                                    <button className="action-btn delete-btn" onClick={(e) => handleDelete(item._id, e)} style={{ color: displayTypeColor, borderColor: displayTypeColor }}>
+                                    <button 
+                                        className="action-btn delete-btn" 
+                                        onClick={(e) => handleDelete(item._id, e)} 
+                                        style={{ color: displayTypeColor, borderColor: displayTypeColor }}
+                                        aria-label='delete button'
+                                    >
                                         <TrashIcon />
                                     </button>
                                 </div>
@@ -316,7 +326,12 @@ function ProductPage() {
                 )}
             </div>
 
-            <button className="fab-add-btn" onClick={handleAddNew} style={{ background: displayTypeColor, color: foreColor }}>
+            <button 
+                className="fab-add-btn" 
+                onClick={handleAddNew} 
+                style={{ background: displayTypeColor, color: foreColor }}
+                aria-label='add new product'
+            >
                 <PlusIcon />
             </button>
 
