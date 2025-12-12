@@ -53,8 +53,8 @@ function ProductPage() {
     //GET products from server
     const fetchProducts = async () => {
         try{
-            // const response = await fetch('http://localhost:5001/api/products');
-            const response = await fetch('/api/products');
+            const response = await fetch('http://localhost:5001/api/products');
+            // const response = await fetch('/api/products');
             const data = await response.json();
             setproducts(data);
             setLoading(false);

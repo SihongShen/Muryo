@@ -7,7 +7,12 @@
   border-radius: 50px;
   padding: 10px;
   box-shadow: 0 4px 15px rgba(0,0,0,0.1);
-  transition: background-color 0.3s ease;
+  transition: background-color 0.3s ease, width 0.3s ease;
+  width: 60px;
+}
+
+.sidebar-container:hover {
+  width: 180px;
 }
 
 .sidebar-pill {
@@ -23,30 +28,57 @@
   border: none;
   cursor: pointer;
   padding: 10px;
-  border-radius: 50%;
+  border-radius: 30px;
   transition: all 0.2s ease;
   display: flex;
   align-items: center;
   justify-content: center;
   opacity: 0.6;
+  background-color: rgba(188, 188, 188, 0.538);
+  min-width: 40px;
+  position: relative;
+  overflow: hidden;
 }
 
 .sidebar-icon:hover {
   opacity: 1;
-  background-color: rgba(0,0,0,0.05);
+  background-color: rgba(255, 254, 254, 0.538);
   transform: scale(1.1);
 }
 
 .sidebar-icon.active {
   opacity: 1;
   font-weight: bold;
-  background-color: rgba(0,0,0,0.1);
+  background-color: rgba(255, 254, 254, 0.538);
+}
+
+.sidebar-label {
+  font-size: 0.85rem;
+  white-space: nowrap;
+  opacity: 0;
+  max-width: 0;
+  transition: opacity 0.3s ease, max-width 0.3s ease;
+  font-weight: 500;
+}
+
+.sidebar-icon:hover .sidebar-label {
+  opacity: 1;
+  max-width: 100px;
 }
 
 /* Responsive Design: iPad and smaller devices */
 @media (max-width: 1024px) {
   .sidebar-container {
     left: 60px;
+    width: 55px;
+  }
+
+  .sidebar-container:hover {
+    width: 160px;
+  }
+
+  .sidebar-label {
+    font-size: 0.8rem;
   }
 }
 
@@ -59,6 +91,11 @@
     transform: translateY(-50%);
     padding: 8px;
     border-radius: 40px;
+    width: 50px;
+  }
+
+  .sidebar-container:hover {
+    width: 140px;
   }
 
   .sidebar-pill {
@@ -70,11 +107,16 @@
     padding: 8px;
     width: 40px;
     height: 40px;
+    min-width: 40px;
   }
 
   .sidebar-icon svg {
     width: 20px;
     height: 20px;
+  }
+
+  .sidebar-label {
+    font-size: 0.75rem;
   }
 }
 
@@ -83,6 +125,11 @@
   .sidebar-container {
     left: 8px;
     padding: 6px;
+    width: 45px;
+  }
+
+  .sidebar-container:hover {
+    width: 120px;
   }
 
   .sidebar-pill {
@@ -94,10 +141,15 @@
     padding: 6px;
     width: 36px;
     height: 36px;
+    min-width: 36px;
   }
 
   .sidebar-icon svg {
     width: 18px;
     height: 18px;
+  }
+
+  .sidebar-label {
+    font-size: 0.7rem;
   }
 }
