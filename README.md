@@ -1,4 +1,4 @@
-# Muryo Memo
+# Muryo Memo 無料MEMO
 
 Muryo is a small full-stack demo project that integrates a dynamic "clutter" background (p5.js + matter-js) into a React front-end, alongside a simple product management API (Express + MongoDB) on the server.
 
@@ -28,13 +28,24 @@ This README summarizes how the repository is organized, how to run the project l
     - index.html
   - src/
     - index.js
+    - index.css
     - App.js
     - pages/
+      - events/
+        - events.jsx
+        - events.css
       - homepage/
         - homepage.jsx
         - homepage.css
+      - login/
+        - login.jsx
+        - login.css
       - products/
         - products.jsx
+        - products.css
+      - users/
+        - users.jsx
+        - users.css
     - components/
       - clutter_js/ (p5 + matter modular code)
         - sketch.js         // exports initBackground({ parent, P5, Matter }) -> API ({ newPalette, remove, getColors })
@@ -46,18 +57,22 @@ This README summarizes how the repository is organized, how to run the project l
           - m_sphere.js
           - circ.js
           - update.js       // palette switching logic only
+      - icons/ (static SVG files)
       - background.jsx     // React wrapper that mounts/manages the p5 instance
       - shuffle.jsx        // Shuffle button component that triggers palette change
+      - DateDisplay.jsx
+      - manageColor.js
+      - ProtectedRoute.js
       - sidebar/
         - sidebar.jsx
-        - icons/*svg
+        - sidebar.css
 
 - server/
   - package.json
+  - server.js
   - src/
     - routes/products.js
     - models/product.js
-    - server.js
 ```
 
 ## Quick start (local development)
